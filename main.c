@@ -9,9 +9,11 @@ struct Node {
 typedef struct Node Node;
 Node* Node_append(Node* this, void* data);
 void Node_new(Node* this);
+void* Node_at(Node* this, int index);
 
 struct Poly {
   Node terms;
+  int termCount;
 };
 
 typedef struct Poly Poly;
@@ -55,15 +57,12 @@ void Poly_print(Poly* this) {
     printf("0\n");
     return;
   }
-  while (1) {
-    Term* tt = (Term*) t->data;
-    printf("%.2f * x ^ %i\n", tt->coefficient, tt->power);
-    t = t->next;
-    if (t == NULL) {
-      break;
-    } else {
-      printf("+ ");
-    }
+  Term* term;
+  term = (Term*) Node_at(&this->terms, 0);
+  printf("%.2f * x ^ %i\n", term->coefficient, term->power);
+  for (int i = 1; i < this->termCount; i++) {
+    term = (Term*) Node_at(&this->terms, i);
+    printf("+ %.2f * x ^ %i\n", term->coefficient, term->power);
   }
 }
 
@@ -73,6 +72,7 @@ void Poly_appendTerm(Poly* this, double coefficient, int power) {
   newTerm->coefficient = coefficient;
 
   Node_append(&this->terms, newTerm);
+  this->termCount += 1;
 }
 
 Node* Node_append(Node* this, void* data) {
@@ -95,6 +95,7 @@ void Node_new(Node* this) {
 
 void Poly_new(Poly* this) {
   Node_new(&this->terms);
+  this->termCount = 0;
 }
 
 void Poly_add(Poly* this, Poly* that, Poly* out) {
@@ -154,4 +155,14 @@ void Poly_add(Poly* this, Poly* that, Poly* out) {
       break;
     }
   }
+}
+
+void* Node_at(Node* this, int index) {
+  int i = 0;
+  Node* p = this->next;
+  while (i < index) {
+    p = p->next;
+    i++;
+  }
+  return p->data;
 }
