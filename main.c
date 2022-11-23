@@ -11,8 +11,7 @@ Node* Node_append(Node* this, void* data);
 void Node_new(Node* this);
 
 struct Poly {
-  Node coefficients;
-  Node powers;
+  Node terms;
 };
 
 typedef struct Poly Poly;
@@ -20,6 +19,13 @@ void Poly_add(Poly* this, Poly* that, Poly* out);
 void Poly_appendTerm(Poly* this, double coefficient, int power);
 void Poly_print(Poly* this);
 void Poly_new(Poly* this);
+
+struct Term {
+  double coefficient;
+  int power;
+};
+
+typedef struct Term Term;
 
 int main() {
   Poly pa;
@@ -44,17 +50,16 @@ int main() {
 }
 
 void Poly_print(Poly* this) {
-  Node* c = this->coefficients.next;
-  Node* p = this->powers.next;
-  if (c == NULL || p == NULL) {
+  Node* t = this->terms.next;
+  if (t == NULL) {
     printf("0\n");
     return;
   }
   while (1) {
-    printf("%.2f * x ^ %i\n", *(double*) c->data, *(int*) p->data);
-    c = c->next;
-    p = p->next;
-    if (c == NULL || p == NULL) {
+    Term* tt = (Term*) t->data;
+    printf("%.2f * x ^ %i\n", tt->coefficient, tt->power);
+    t = t->next;
+    if (t == NULL) {
       break;
     } else {
       printf("+ ");
@@ -63,12 +68,11 @@ void Poly_print(Poly* this) {
 }
 
 void Poly_appendTerm(Poly* this, double coefficient, int power) {
-  double* c = (double*) malloc(sizeof(double));
-  *c = coefficient;
-  int* p = (int*) malloc(sizeof(power));
-  *p = power;
-  Node_append(&this->coefficients, c);
-  Node_append(&this->powers, p);
+  Term* newTerm = (Term*) malloc(sizeof(Term));
+  newTerm->power = power;
+  newTerm->coefficient = coefficient;
+
+  Node_append(&this->terms, newTerm);
 }
 
 Node* Node_append(Node* this, void* data) {
@@ -90,65 +94,63 @@ void Node_new(Node* this) {
 }
 
 void Poly_new(Poly* this) {
-  Node_new(&this->coefficients);
-  Node_new(&this->powers);
+  Node_new(&this->terms);
 }
 
 void Poly_add(Poly* this, Poly* that, Poly* out) {
-  Node* p = this->powers.next;
-  Node* c = this->coefficients.next;
+  Node* p = this->terms.next;
   while (1) {
-    Poly_appendTerm(out, *(double*) c->data, *(int*) p->data);
+    Term* tt = (Term*) p->data;
+    Poly_appendTerm(out, tt->coefficient, tt->power);
     p = p->next;
-    c = c->next;
-    if (p == NULL || c == NULL) {
+    if (p == NULL) {
       break;
     }
   }
 
-  Node* thatC = that->coefficients.next;
-  Node* thatP = that->powers.next;
+  Node* thatT = that->terms.next;
   while (1) {
-    double thatCoef = *(double*) thatC->data;
-    int thatPow = *(int*) thatP->data;
+    Term* thatCurrentTerm = (Term*) thatT->data;
 
+    int thatPow = thatCurrentTerm->power;
     int thatGotSamePower = 0;
 
-    Node* outP = out->powers.next;
-    Node* outC = out->coefficients.next;
+    Node* outT = out->terms.next;
     while (1) {
-      if (*(int*) outP->data == thatPow) {
+      Term* t = (Term*) outT->data;
+      if (t->power == thatPow) {
         thatGotSamePower = 1;
         break;
       }
-      outP = outP->next;
-      outC = outC->next;
-      if (outP == NULL || outC == NULL) {
+      outT = outT->next;
+      if (outT == NULL) {
         break;
       }
     }
 
     if (thatGotSamePower) {
-      Node* op = out->powers.next;
-      Node* oc = out->coefficients.next;
+      Node* outTT = out->terms.next;
       while (1) {
-        if (*(int*) op->data == thatPow) {
-          *(double*) oc->data += thatCoef;
+        Term* t = (Term*) thatT->data;
+        if (t->power == thatPow) {
+          ((Term*) outTT->data)->coefficient += t->coefficient;
           break;
         }
-        op = op->next;
-        oc = oc->next;
-        if (op == NULL || oc == NULL) {
+        outTT = outTT->next;
+        if (outTT == NULL) {
           break;
         }
       }
     } else {
-      Poly_appendTerm(out, thatCoef, thatPow);
+      Poly_appendTerm(
+          out,
+          thatCurrentTerm->coefficient,
+          thatCurrentTerm->power
+      );
     }
 
-    thatP = thatP->next;
-    thatC = thatC->next;
-    if (thatP == NULL || thatC == NULL) {
+    thatT = thatT->next;
+    if (thatT == NULL) {
       break;
     }
   }
