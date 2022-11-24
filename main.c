@@ -69,7 +69,19 @@ void Poly_appendTerm(Poly* this, double coefficient, int power) {
   newTerm->power = power;
   newTerm->coefficient = coefficient;
 
-  Node_append(&this->terms, newTerm);
+  Term* findSamePowerInOut = NULL;
+  for (Node* q = this->terms.next; q != NULL; q = q->next) {
+    Term* t = (Term*) q->data;
+    if (t->power == power) {
+      findSamePowerInOut = t;
+      break;
+    }
+  }
+  if (findSamePowerInOut != NULL) {
+    findSamePowerInOut->coefficient += coefficient;
+  } else {
+    Node_append(&this->terms, newTerm);
+  }
 }
 
 Node* Node_append(Node* this, void* data) {
@@ -102,20 +114,6 @@ void Poly_add(Poly* this, Poly* that, Poly* out) {
 
   for (Node* p = that->terms.next; p != NULL; p = p->next) {
     Term* thatT = (Term*) p->data;
-
-    Term* findSamePowerInOut = NULL;
-    for (Node* q = out->terms.next; q != NULL; q = q->next) {
-      Term* outT = (Term*) q->data;
-      if (outT->power == thatT->power) {
-        findSamePowerInOut = outT;
-        break;
-      }
-    }
-
-    if (findSamePowerInOut != NULL) {
-      findSamePowerInOut->coefficient += thatT->coefficient;
-    } else {
-      Poly_appendTerm(out, thatT->coefficient, thatT->power);
-    }
+    Poly_appendTerm(out, thatT->coefficient, thatT->power);
   }
 }
