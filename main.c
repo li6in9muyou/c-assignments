@@ -55,15 +55,12 @@ void Poly_print(Poly* this) {
     printf("0\n");
     return;
   }
-  while (1) {
-    Term* tt = (Term*) t->data;
-    printf("%.2f * x ^ %i\n", tt->coefficient, tt->power);
-    t = t->next;
-    if (t == NULL) {
-      break;
-    } else {
-      printf("+ ");
-    }
+  Node* p = this->terms.next;
+  Term* tt = (Term*) p->data;
+  printf("%.2f * x ^ %i\n", tt->coefficient, tt->power);
+  for (p = p->next; p != NULL; p = p->next) {
+    tt = (Term*) p->data;
+    printf("+ %.2f * x ^ %i\n", tt->coefficient, tt->power);
   }
 }
 
@@ -98,60 +95,27 @@ void Poly_new(Poly* this) {
 }
 
 void Poly_add(Poly* this, Poly* that, Poly* out) {
-  Node* p = this->terms.next;
-  while (1) {
-    Term* tt = (Term*) p->data;
-    Poly_appendTerm(out, tt->coefficient, tt->power);
-    p = p->next;
-    if (p == NULL) {
-      break;
-    }
+  for (Node* p = this->terms.next; p != NULL; p = p->next) {
+    Term* t = (Term*) p->data;
+    Poly_appendTerm(out, t->coefficient, t->power);
   }
 
-  Node* thatT = that->terms.next;
-  while (1) {
-    Term* thatCurrentTerm = (Term*) thatT->data;
+  for (Node* p = that->terms.next; p != NULL; p = p->next) {
+    Term* thatT = (Term*) p->data;
 
-    int thatPow = thatCurrentTerm->power;
-    int thatGotSamePower = 0;
-
-    Node* outT = out->terms.next;
-    while (1) {
-      Term* t = (Term*) outT->data;
-      if (t->power == thatPow) {
-        thatGotSamePower = 1;
-        break;
-      }
-      outT = outT->next;
-      if (outT == NULL) {
+    Term* findSamePowerInOut = NULL;
+    for (Node* q = out->terms.next; q != NULL; q = q->next) {
+      Term* outT = (Term*) q->data;
+      if (outT->power == thatT->power) {
+        findSamePowerInOut = outT;
         break;
       }
     }
 
-    if (thatGotSamePower) {
-      Node* outTT = out->terms.next;
-      while (1) {
-        Term* t = (Term*) thatT->data;
-        if (t->power == thatPow) {
-          ((Term*) outTT->data)->coefficient += t->coefficient;
-          break;
-        }
-        outTT = outTT->next;
-        if (outTT == NULL) {
-          break;
-        }
-      }
+    if (findSamePowerInOut != NULL) {
+      findSamePowerInOut->coefficient += thatT->coefficient;
     } else {
-      Poly_appendTerm(
-          out,
-          thatCurrentTerm->coefficient,
-          thatCurrentTerm->power
-      );
-    }
-
-    thatT = thatT->next;
-    if (thatT == NULL) {
-      break;
+      Poly_appendTerm(out, thatT->coefficient, thatT->power);
     }
   }
 }
