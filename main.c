@@ -30,22 +30,39 @@ struct Term {
 typedef struct Term Term;
 
 int main() {
+  double c;
+  int p, cc;
+
   Poly pa;
   Poly_new(&pa);
-  Poly_addTerm(&pa, 2.7, 0);
-  Poly_addTerm(&pa, 1.7, -1);
+  puts("first polynomial");
+  puts("enter term count");
+  scanf_s("%d", &cc);
+  printf("%d terms\n", cc);
+  while (cc--) {
+    scanf_s("%lf %d", &c, &p);
+    Poly_addTerm(&pa, c, p);
+  }
+  puts("first polynomial is: ");
   Poly_print(&pa);
 
   Poly pb;
   Poly_new(&pb);
-  Poly_addTerm(&pb, 27, 2);
-  Poly_addTerm(&pb, 100.7, 0);
-  Poly_addTerm(&pb, -1, 3);
+  puts("second polynomial");
+  puts("enter term count");
+  scanf_s("%d\n", &cc);
+  printf("%i terms\n", cc);
+  while (cc--) {
+    scanf_s("%lf %d", &c, &p);
+    Poly_addTerm(&pb, c, p);
+  }
+  puts("second polynomial is: ");
   Poly_print(&pb);
 
   Poly pc;
   Poly_new(&pc);
   Poly_add(&pa, &pb, &pc);
+  puts("sum:");
   Poly_print(&pc);
 
   Poly_dispose(&pa);
