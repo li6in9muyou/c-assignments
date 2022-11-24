@@ -108,8 +108,8 @@ void Poly_new(Poly* this) {
 
 void Poly_add(Poly* this, Poly* that, Poly* out) {
   for (Node* p = this->terms.next; p != NULL; p = p->next) {
-    Term* t = (Term*) p->data;
-    Poly_appendTerm(out, t->coefficient, t->power);
+    Term* thisT = (Term*) p->data;
+    Poly_appendTerm(out, thisT->coefficient, thisT->power);
   }
 
   for (Node* p = that->terms.next; p != NULL; p = p->next) {
