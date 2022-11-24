@@ -50,7 +50,7 @@ int main() {
   Poly_new(&pb);
   puts("second polynomial");
   puts("enter term count");
-  scanf_s("%d\n", &cc);
+  scanf_s("%d", &cc);
   printf("%i terms\n", cc);
   while (cc--) {
     scanf_s("%lf %d", &c, &p);
