@@ -8,7 +8,18 @@ struct Node {
   struct Node* right;
 };
 typedef struct Node Node;
-Node* Tree_new(const int preOrder[], int count, int start);
+
+Node* Tree_new(const int preOrder[], int count, int start) {
+  if (start >= count) {
+    return NULL;
+  }
+
+  Node* root = (Node*) malloc(sizeof(Node));
+  root->index = preOrder[start];
+  root->left = Tree_new(preOrder, count, 2 * start);
+  root->right = Tree_new(preOrder, count, 2 * start + 1);
+  return root;
+}
 
 Node* Stack[100];
 Node** pTop = Stack;
@@ -62,16 +73,4 @@ int main() {
   postTravel(root);
 
   return 0;
-}
-
-Node* Tree_new(const int* preOrder, int count, int start) {
-  if (start >= count) {
-    return NULL;
-  }
-
-  Node* root = (Node*) malloc(sizeof(Node));
-  root->index = preOrder[start];
-  root->left = Tree_new(preOrder, count, 2 * start);
-  root->right = Tree_new(preOrder, count, 2 * start + 1);
-  return root;
 }
