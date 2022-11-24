@@ -16,7 +16,7 @@ struct Poly {
 
 typedef struct Poly Poly;
 void Poly_add(Poly* this, Poly* that, Poly* out);
-void Poly_appendTerm(Poly* this, double coefficient, int power);
+void Poly_addTerm(Poly* this, double coefficient, int power);
 void Poly_print(Poly* this);
 void Poly_new(Poly* this);
 
@@ -30,15 +30,15 @@ typedef struct Term Term;
 int main() {
   Poly pa;
   Poly_new(&pa);
-  Poly_appendTerm(&pa, 2.7, 0);
-  Poly_appendTerm(&pa, 1.7, -1);
+  Poly_addTerm(&pa, 2.7, 0);
+  Poly_addTerm(&pa, 1.7, -1);
   Poly_print(&pa);
 
   Poly pb;
   Poly_new(&pb);
-  Poly_appendTerm(&pb, 27, 2);
-  Poly_appendTerm(&pb, 100.7, 0);
-  Poly_appendTerm(&pb, -1, 3);
+  Poly_addTerm(&pb, 27, 2);
+  Poly_addTerm(&pb, 100.7, 0);
+  Poly_addTerm(&pb, -1, 3);
   Poly_print(&pb);
 
   Poly pc;
@@ -64,7 +64,7 @@ void Poly_print(Poly* this) {
   }
 }
 
-void Poly_appendTerm(Poly* this, double coefficient, int power) {
+void Poly_addTerm(Poly* this, double coefficient, int power) {
   Term* newTerm = (Term*) malloc(sizeof(Term));
   newTerm->power = power;
   newTerm->coefficient = coefficient;
@@ -109,11 +109,11 @@ void Poly_new(Poly* this) {
 void Poly_add(Poly* this, Poly* that, Poly* out) {
   for (Node* p = this->terms.next; p != NULL; p = p->next) {
     Term* thisT = (Term*) p->data;
-    Poly_appendTerm(out, thisT->coefficient, thisT->power);
+    Poly_addTerm(out, thisT->coefficient, thisT->power);
   }
 
   for (Node* p = that->terms.next; p != NULL; p = p->next) {
     Term* thatT = (Term*) p->data;
-    Poly_appendTerm(out, thatT->coefficient, thatT->power);
+    Poly_addTerm(out, thatT->coefficient, thatT->power);
   }
 }
