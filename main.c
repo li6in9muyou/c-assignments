@@ -65,7 +65,7 @@ void postTravel(Node* root) {
   }
 }
 
-int _print_t(Node* tree, int is_left, int offset, int depth, char s[20][255]) {
+int printSubTree(Node* tree, int is_left, int offset, int depth, char s[20][255]) {
   char b[20];
   int width = 5;
 
@@ -73,8 +73,8 @@ int _print_t(Node* tree, int is_left, int offset, int depth, char s[20][255]) {
 
   sprintf(b, "(%03d)", tree->index);
 
-  int left = _print_t(tree->left, 1, offset, depth + 1, s);
-  int right = _print_t(tree->right, 0, offset + left + width, depth + 1, s);
+  int left = printSubTree(tree->left, 1, offset, depth + 1, s);
+  int right = printSubTree(tree->right, 0, offset + left + width, depth + 1, s);
 
   for (int i = 0; i < width; i++)
     s[2 * depth][offset + left + i] = b[i];
@@ -97,12 +97,12 @@ int _print_t(Node* tree, int is_left, int offset, int depth, char s[20][255]) {
   return left + width + right;
 }
 
-void print_t(Node* tree) {
+void printFromRoot(Node* tree) {
   char frameBuffer[20][255];
   for (int i = 0; i < 20; i++)
     sprintf(frameBuffer[i], "%254s", "");
 
-  _print_t(tree, 0, 0, 0, frameBuffer);
+  printSubTree(tree, 0, 0, 0, frameBuffer);
 
   for (int i = 0; i < 20; i++) {
     printf("%s\n", frameBuffer[i]);
@@ -133,7 +133,7 @@ int main() {
 
   postTravel(root);
   putchar('\n');
-  print_t(root);
+  printFromRoot(root);
 
   return 0;
 }
