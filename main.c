@@ -21,6 +21,7 @@ void Poly_addTerm(Poly* this, double coefficient, int power);
 void Poly_print(Poly* this);
 void Poly_new(Poly* this);
 void Poly_dispose(Poly* this);
+void Poly_buildInteractively(Poly* this);
 
 struct Term {
   double coefficient;
@@ -30,32 +31,17 @@ struct Term {
 typedef struct Term Term;
 
 int main() {
-  double c;
-  int p, cc;
-
   Poly pa;
   Poly_new(&pa);
   puts("first polynomial");
-  puts("enter term count");
-  scanf_s("%d", &cc);
-  printf("%d terms\n", cc);
-  while (cc--) {
-    scanf_s("%lf %d", &c, &p);
-    Poly_addTerm(&pa, c, p);
-  }
+  Poly_buildInteractively(&pa);
   puts("first polynomial is: ");
   Poly_print(&pa);
 
   Poly pb;
   Poly_new(&pb);
   puts("second polynomial");
-  puts("enter term count");
-  scanf_s("%d", &cc);
-  printf("%i terms\n", cc);
-  while (cc--) {
-    scanf_s("%lf %d", &c, &p);
-    Poly_addTerm(&pb, c, p);
-  }
+  Poly_buildInteractively(&pb);
   puts("second polynomial is: ");
   Poly_print(&pb);
 
@@ -154,5 +140,17 @@ void Node_dispose(Node* this) {
     return;
   } else {
     Node_dispose(this->next);
+  }
+}
+
+void Poly_buildInteractively(Poly* this) {
+  double c;
+  int p, cc;
+  puts("enter term count");
+  scanf_s("%d", &cc);
+  printf("%d terms\n", cc);
+  while (cc--) {
+    scanf_s("%lf %d", &c, &p);
+    Poly_addTerm(this, c, p);
   }
 }
