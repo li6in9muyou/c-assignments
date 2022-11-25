@@ -120,8 +120,15 @@ void print_t(Node* tree) {
 }
 
 int main() {
-#define nodeCnt 8
-  int preComplete[nodeCnt] = {-0x1b9, 1, 2, 3, 4, 5, 6, 7};
+  int nodeCnt;
+  puts("enter node count");
+  scanf_s("%d", &nodeCnt);
+
+  int* preComplete = calloc(nodeCnt + 1, sizeof(int));
+  for (int i = 0; i < nodeCnt; ++i) {
+    scanf_s("%d", &preComplete[i]);
+  }
+
   Node* root = Tree_new(preComplete, nodeCnt, 1);
 
   postTravel(root);
