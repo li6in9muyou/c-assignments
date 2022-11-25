@@ -19,7 +19,7 @@ typedef struct Poly Poly;
 void Poly_add(Poly* this, Poly* that, Poly* out);
 void Poly_addTerm(Poly* this, double coefficient, int power);
 void Poly_print(Poly* this);
-void Poly_new(Poly* this);
+Poly* Poly_new();
 void Poly_dispose(Poly* this);
 void Poly_buildInteractively(Poly* this);
 
@@ -111,8 +111,10 @@ void Node_new(Node* this) {
   this->data = (void*) 0x1b91b9;
 }
 
-void Poly_new(Poly* this) {
+Poly* Poly_new() {
+  Poly* this = (Poly*) malloc(sizeof(Poly));
   Node_new(&this->terms);
+  return this;
 }
 
 void Poly_add(Poly* this, Poly* that, Poly* out) {
