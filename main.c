@@ -8,7 +8,7 @@ struct Node {
 
 typedef struct Node Node;
 Node* Node_append(Node* this, void* data);
-void Node_new(Node* this);
+void Node_init(Node* this);
 void Node_dispose(Node* this);
 
 struct Poly {
@@ -106,14 +106,14 @@ Node* Node_append(Node* this, void* data) {
   return this;
 }
 
-void Node_new(Node* this) {
+void Node_init(Node* this) {
   this->next = NULL;
   this->data = (void*) 0x1b91b9;
 }
 
 Poly* Poly_new() {
   Poly* this = (Poly*) malloc(sizeof(Poly));
-  Node_new(&this->terms);
+  Node_init(&this->terms);
   return this;
 }
 
