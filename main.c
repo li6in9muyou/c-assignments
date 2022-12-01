@@ -56,6 +56,14 @@ int main() {
   return 0;
 }
 
+void Term_print(Term* term) {
+  if (term->power != 0) {
+    printf("%.2f * x ^ %i\n", term->coefficient, term->power);
+  } else {
+    printf("%.2f\n", term->coefficient);
+  }
+}
+
 void Poly_print(Poly* this) {
   Node* t = this->terms.next;
   if (t == NULL) {
@@ -64,10 +72,11 @@ void Poly_print(Poly* this) {
   }
   Node* p = this->terms.next;
   Term* tt = (Term*) p->data;
-  printf("%.2f * x ^ %i\n", tt->coefficient, tt->power);
+  Term_print(tt);
   for (p = p->next; p != NULL; p = p->next) {
     tt = (Term*) p->data;
-    printf("+ %.2f * x ^ %i\n", tt->coefficient, tt->power);
+    printf("+ ");
+    Term_print(tt);
   }
 }
 
