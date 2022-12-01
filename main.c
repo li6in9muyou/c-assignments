@@ -33,6 +33,14 @@ void heap_insert(Heap* heap, int value) {
   }
 }
 
+int heap_size(Heap* heap) {
+  return heap->size;
+}
+
+int heap_at(Heap* heap, int i) {
+  return heap->data[i];
+}
+
 int main() {
   int _a[100];
   Heap _h = {0, _a};
@@ -46,5 +54,15 @@ int main() {
     scanf_s("%d", &number);
     heap_insert(h, number);
   }
+
+  for (int i = 0; i < heap_size(h); ++i) {
+    printf("给定下标%d，打印从H[%d]到根节点的路径\n", i, i);
+    printf("%d(%d)", i, heap_at(h, i));
+    for (int j = parent(i); j != 0; j = parent(j)) {
+      printf(" -> %d(%d)", i, heap_at(h, i));
+    }
+    printf(" -> 0(%d)\n", heap_at(h, 0));
+  }
+
   return 0;
 }
