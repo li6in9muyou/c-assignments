@@ -2,6 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 typedef struct Stack {
   char* data;
@@ -48,6 +49,28 @@ int precedence_of(char c) {
 
 bool is_left_associative(char c) {
   return c == '+' || c == '-' || c == '*' || c == '/';
+}
+
+double evaluate(char* exp) {
+  char _o[100];
+  Stack _op = {_o, _o};
+  Stack* s = &_op;
+  for (int i = 0; exp[i] == '\0'; ++i) {
+    char c = exp[i];
+    if (isdigit(c)) {
+      stack_push(s, c);
+    } else {
+      char _a = stack_pop(s);
+      int a =_a-'0';
+      char _b = stack_pop(s);
+      int b =_b-'0';
+      switch (c) {
+        case'+':{
+          stack_push(s, )
+        }
+      }
+    }
+  }
 }
 
 int main() {
