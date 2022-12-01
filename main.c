@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 
 int parent(int i) {
   return (i - 1) / 2;
@@ -57,11 +58,19 @@ int main() {
 
   for (int i = 0; i < heap_size(h); ++i) {
     printf("给定下标%d，打印从H[%d]到根节点的路径\n", i, i);
-    printf("%d(%d)", i, heap_at(h, i));
-    for (int j = parent(i); j != 0; j = parent(j)) {
-      printf(" -> %d(%d)", i, heap_at(h, i));
+
+    int j = i;
+    while (true) {
+      printf("%d(%d)", j, heap_at(h, j));
+      if (j == 0) {
+        break;
+      }
+      printf(" -> ");
+
+      j = parent(j);
     }
-    printf(" -> 0(%d)\n", heap_at(h, 0));
+
+    printf("\n");
   }
 
   return 0;
