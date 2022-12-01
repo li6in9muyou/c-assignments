@@ -58,6 +58,7 @@ int main() {
   char input[100];
   puts("enter expression e.g. 5+a/(3-c)^5^d");
   puts("there must not be blank spaces between tokens");
+  puts("integers must be one of 0,1,2,3,4,5,6,7,8,9");
   gets_s(input, 100);
   printf("input : %s\n", input);
 
