@@ -67,12 +67,12 @@ int main() {
   for (int i = 0; i < strlen(input); ++i) {
     char c = input[i];
     if (isalnum(c)) {
-      output += sprintf(output, "%c ", c);
+      output += sprintf_s(output, 3, "%c ", c);
     } else if (c == '(') {
       stack_push(s, c);
     } else if (c == ')') {
       while (!stack_empty(s) && stack_peek(s) != '(') {
-        output += sprintf(output, "%c ", stack_pop(s));
+        output += sprintf_s(output, 3, "%c ", stack_pop(s));
       }
       stack_pop(s);
     } else {
@@ -81,14 +81,14 @@ int main() {
               && precedence_of(c) <= precedence_of(stack_peek(s))
               && is_left_associative(c)
           ) {
-        output += sprintf(output, "%c ", stack_pop(s));
+        output += sprintf_s(output, 3, "%c ", stack_pop(s));
       }
       stack_push(s, c);
     }
   }
 
   while (!stack_empty(s)) {
-    output += sprintf(output, "%c ", stack_pop(s));
+    output += sprintf_s(output, 3, "%c ", stack_pop(s));
   }
 
   printf("output: %s\n", outputBuffer);
