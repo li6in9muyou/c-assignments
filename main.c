@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <math.h>
 
 typedef struct Stack {
   char* data;
@@ -24,6 +25,30 @@ char stack_peek(Stack* stack) {
 
 char stack_pop(Stack* stack) {
   char ans = stack_peek(stack);
+  stack->top -= 1;
+  return ans;
+}
+
+typedef struct DoubleStack {
+  double* data;
+  double* top;
+} DoubleStack;
+
+void double_stack_push(DoubleStack* stack, double data) {
+  *stack->top = data;
+  stack->top += 1;
+}
+
+bool double_stack_empty(DoubleStack* stack) {
+  return stack->top == stack->data;
+}
+
+double double_stack_peek(DoubleStack* stack) {
+  return *(stack->top - 1);
+}
+
+double double_stack_pop(DoubleStack* stack) {
+  double ans = double_stack_peek(stack);
   stack->top -= 1;
   return ans;
 }
@@ -51,26 +76,45 @@ bool is_left_associative(char c) {
   return c == '+' || c == '-' || c == '*' || c == '/';
 }
 
-double evaluate(char* exp) {
-  char _o[100];
-  Stack _op = {_o, _o};
-  Stack* s = &_op;
-  for (int i = 0; exp[i] == '\0'; ++i) {
+double evaluate(const char* exp) {
+  double _o[100];
+  DoubleStack _op = {_o, _o};
+  DoubleStack* s = &_op;
+  for (int i = 0; exp[i] != '\0'; ++i) {
     char c = exp[i];
     if (isdigit(c)) {
-      stack_push(s, c);
+      double_stack_push(s, (double) c - '0');
     } else {
-      char _a = stack_pop(s);
-      int a =_a-'0';
-      char _b = stack_pop(s);
-      int b =_b-'0';
+      double rhs = double_stack_pop(s);
+      double lhs = double_stack_pop(s);
       switch (c) {
-        case'+':{
-          stack_push(s, )
+        case '+': {
+          double_stack_push(s, lhs + rhs);
+          break;
+        }
+        case '-': {
+          double_stack_push(s, lhs - rhs);
+          break;
+        }
+        case '*': {
+          double_stack_push(s, lhs * rhs);
+          break;
+        }
+        case '/': {
+          double_stack_push(s, lhs / rhs);
+          break;
+        }
+        case '^': {
+          double_stack_push(s, pow(lhs, rhs));
+          break;
+        }
+        default: {
+          perror("ERROR: unknown operator");
         }
       }
     }
   }
+  return double_stack_pop(s);
 }
 
 int main() {
@@ -116,6 +160,8 @@ int main() {
   }
 
   printf("output: %s\n", outputBuffer);
+  double result = evaluate(outputBuffer);
+  printf("evaluate: %.5lf", result);
 
   return 0;
 }
