@@ -124,12 +124,12 @@ int main() {
   puts("enter node count");
   scanf_s("%d", &nodeCnt);
 
-  int* preComplete = calloc(nodeCnt + 1, sizeof(int));
+  int* preOrderCompleteBinaryTree = calloc(nodeCnt + 1, sizeof(int));
   for (int i = 0; i < nodeCnt; ++i) {
-    scanf_s("%d", &preComplete[i + 1]);
+    scanf_s("%d", &preOrderCompleteBinaryTree[i + 1]);
   }
 
-  Node* root = Tree_new(preComplete, nodeCnt + 1, 1);
+  Node* root = Tree_new(preOrderCompleteBinaryTree, nodeCnt + 1, 1);
 
   postTravel(root);
   putchar('\n');
