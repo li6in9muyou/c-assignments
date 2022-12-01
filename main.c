@@ -2,21 +2,25 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define V 10
+#define nVertex 10
 
-int minDistance(int dist[], bool sptSet[]) {
-  int min = INT_MAX, min_index;
+int minDistance(const int dist[], const bool sptSet[]) {
+  int min = INT_MAX;
+  int min_index;
 
-  for (int v = 0; v < V; v++)
-    if (sptSet[v] == false && dist[v] <= min)
-      min = dist[v], min_index = v;
+  for (int v = 0; v < nVertex; v++) {
+    if (sptSet[v] == false && dist[v] <= min) {
+      min = dist[v];
+      min_index = v;
+    }
+  }
 
   return min_index;
 }
 
-void printSolution(const int dist[V], const int parent[V], const int weights[V][V]) {
+void printSolution(const int dist[nVertex], const int parent[nVertex], const int weights[nVertex][nVertex]) {
   printf("Vertex\t\tDistance\tPath\n");
-  for (int i = 0; i < V; i++) {
+  for (int i = 0; i < nVertex; i++) {
     printf("%d\t\t%d\t\t", i, dist[i]);
     int to = i;
     while (true) {
@@ -32,38 +36,41 @@ void printSolution(const int dist[V], const int parent[V], const int weights[V][
   }
 }
 
-void dijkstra(int graph[V][V], int src) {
-  int dist[V];
-  int parent[V];
+void dijkstra(int graph[nVertex][nVertex], int src) {
+  bool processed[nVertex];
 
-  bool sptSet[V];
-
-  for (int i = 0; i < V; i++)
-    dist[i] = INT_MAX, sptSet[i] = false;
-
+  int dist[nVertex];
+  for (int i = 0; i < nVertex; i++) {
+    dist[i] = INT_MAX;
+    processed[i] = false;
+  }
   dist[src] = 0;
-  parent[src] = -1;
 
-  for (int count = 0; count < V - 1; count++) {
-    int u = minDistance(dist, sptSet);
+  int previousStop[nVertex];
+  previousStop[src] = -1;
+  for (int i = 0; i < nVertex - 1; i++) {
+    int u = minDistance(dist, processed);
+    bool reachable = dist[u] != INT_MAX;
+    if (!reachable) {
+      continue;
+    }
 
-    sptSet[u] = true;
-
-    for (int v = 0; v < V; v++)
-
-      if (!sptSet[v] && graph[u][v]
-          && dist[u] != INT_MAX
-          && dist[u] + graph[u][v] < dist[v]) {
-        dist[v] = dist[u] + graph[u][v];
-        parent[v] = u;
+    processed[u] = true;
+    for (int nbg = 0; nbg < nVertex; nbg++) {
+      bool isNeighbour = graph[u][nbg] != 0;
+      if (isNeighbour && !processed[nbg]
+          && dist[u] + graph[u][nbg] < dist[nbg]) {
+        dist[nbg] = dist[u] + graph[u][nbg];
+        previousStop[nbg] = u;
       }
+    }
   }
 
-  printSolution(dist, parent, graph);
+  printSolution(dist, previousStop, graph);
 }
 
 int main() {
-  int edgeWeights[V][V] = {
+  int edgeWeights[nVertex][nVertex] = {
       {0, 2, 0, 5, 0, 0, 0, 0, 0, 0,},
       {2, 0, 5, 2, 0, 0, 0, 0, 0, 0,},
       {0, 5, 0, 0, 8, 4, 0, 0, 2, 0,},
