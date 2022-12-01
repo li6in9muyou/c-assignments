@@ -3,7 +3,7 @@
 #include "stdlib.h"
 
 struct Node {
-  int index;
+  int data;
   struct Node* left;
   struct Node* right;
 };
@@ -15,7 +15,7 @@ Node* Tree_new(const int preOrder[], int count, int start) {
   }
 
   Node* root = (Node*) malloc(sizeof(Node));
-  root->index = preOrder[start];
+  root->data = preOrder[start];
   root->left = Tree_new(preOrder, count, 2 * start);
   root->right = Tree_new(preOrder, count, 2 * start + 1);
   return root;
@@ -51,7 +51,7 @@ void postTravel(Node* root) {
     cur = Stack_peek();
     if ((cur->left == NULL && cur->right == NULL)
         || (pre != NULL && (pre == cur->left || pre == cur->right))) {
-      printf("%d ", cur->index);
+      printf("%d ", cur->data);
       Stack_pop();
       pre = cur;
     } else {
@@ -71,7 +71,7 @@ int printSubTree(Node* tree, int is_left, int offset, int depth, char s[20][255]
 
   if (!tree) return 0;
 
-  sprintf_s(b, 6, "(%03d)", tree->index);
+  sprintf_s(b, 6, "(%03d)", tree->data);
 
   int left = printSubTree(tree->left, 1, offset, depth + 1, s);
   int right = printSubTree(tree->right, 0, offset + left + width, depth + 1, s);
