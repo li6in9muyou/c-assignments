@@ -71,7 +71,7 @@ int printSubTree(Node* tree, int is_left, int offset, int depth, char s[20][255]
 
   if (!tree) return 0;
 
-  sprintf(b, "(%03d)", tree->index);
+  sprintf_s(b, 6, "(%03d)", tree->index);
 
   int left = printSubTree(tree->left, 1, offset, depth + 1, s);
   int right = printSubTree(tree->right, 0, offset + left + width, depth + 1, s);
@@ -100,7 +100,7 @@ int printSubTree(Node* tree, int is_left, int offset, int depth, char s[20][255]
 void printFromRoot(Node* tree) {
   char frameBuffer[20][255];
   for (int i = 0; i < 20; i++)
-    sprintf(frameBuffer[i], "%254s", "");
+    sprintf_s(frameBuffer[i], 255, "%254s", "");
 
   printSubTree(tree, 0, 0, 0, frameBuffer);
 
