@@ -81,10 +81,6 @@ void Poly_print(Poly* this) {
 }
 
 void Poly_addTerm(Poly* this, double coefficient, int power) {
-  Term* newTerm = (Term*) malloc(sizeof(Term));
-  newTerm->power = power;
-  newTerm->coefficient = coefficient;
-
   Term* findSamePowerInOut = NULL;
   for (Node* q = this->terms.next; q != NULL; q = q->next) {
     Term* t = (Term*) q->data;
@@ -98,6 +94,9 @@ void Poly_addTerm(Poly* this, double coefficient, int power) {
   if (notFound) {
     findSamePowerInOut->coefficient += coefficient;
   } else {
+    Term* newTerm = (Term*) malloc(sizeof(Term));
+    newTerm->power = power;
+    newTerm->coefficient = coefficient;
     Node_append(&this->terms, newTerm);
   }
 }
