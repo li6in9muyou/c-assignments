@@ -57,11 +57,11 @@ int main() {
 
   for (int i = 0; i < heap_size(h); ++i) {
     printf("给定下标%d，打印从H[%d]到根节点的路径\n", i, i);
-    printf("%d(%d)", i, heap_at(h, i));
-    for (int j = parent(i); j != 0; j = parent(j)) {
-      printf(" -> %d(%d)", i, heap_at(h, i));
+    for (int j = i; j != 0; j = parent(j)) {
+      printf("%d(%d)", j, heap_at(h, j));
+      printf(" -> ");
     }
-    printf(" -> 0(%d)\n", heap_at(h, 0));
+    printf("0(%d)\n", heap_at(h, 0));
   }
 
   return 0;
