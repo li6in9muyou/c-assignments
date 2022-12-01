@@ -14,14 +14,27 @@ int minDistance(int dist[], bool sptSet[]) {
   return min_index;
 }
 
-void printSolution(int dist[]) {
-  printf("Vertex \t\t Distance from Source\n");
-  for (int i = 0; i < V; i++)
-    printf("%d \t\t\t\t %d\n", i, dist[i]);
+void printSolution(const int dist[V], const int parent[V], const int weights[V][V]) {
+  printf("Vertex\t\tDistance\tPath\n");
+  for (int i = 0; i < V; i++) {
+    printf("%d\t\t%d\t\t", i, dist[i]);
+    int to = i;
+    while (true) {
+      int from = parent[to];
+      printf("(%d)", to);
+      if (from == -1) {
+        break;
+      }
+      printf("-%d-", weights[from][to]);
+      to = from;
+    }
+    puts("");
+  }
 }
 
 void dijkstra(int graph[V][V], int src) {
   int dist[V];
+  int parent[V];
 
   bool sptSet[V];
 
@@ -29,6 +42,7 @@ void dijkstra(int graph[V][V], int src) {
     dist[i] = INT_MAX, sptSet[i] = false;
 
   dist[src] = 0;
+  parent[src] = -1;
 
   for (int count = 0; count < V - 1; count++) {
     int u = minDistance(dist, sptSet);
@@ -39,11 +53,13 @@ void dijkstra(int graph[V][V], int src) {
 
       if (!sptSet[v] && graph[u][v]
           && dist[u] != INT_MAX
-          && dist[u] + graph[u][v] < dist[v])
+          && dist[u] + graph[u][v] < dist[v]) {
         dist[v] = dist[u] + graph[u][v];
+        parent[v] = u;
+      }
   }
 
-  printSolution(dist);
+  printSolution(dist, parent, graph);
 }
 
 int main() {
