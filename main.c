@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <malloc.h>
+#include <stdbool.h>
 
 struct Node {
   void* data;
@@ -31,29 +32,26 @@ struct Term {
 typedef struct Term Term;
 
 int main() {
-  Poly pa;
-  Poly_new(&pa);
+  Poly* pa = Poly_new();
   puts("first polynomial");
-  Poly_buildInteractively(&pa);
+  Poly_buildInteractively(pa);
   puts("first polynomial is: ");
-  Poly_print(&pa);
+  Poly_print(pa);
 
-  Poly pb;
-  Poly_new(&pb);
+  Poly* pb = Poly_new();
   puts("second polynomial");
-  Poly_buildInteractively(&pb);
+  Poly_buildInteractively(pb);
   puts("second polynomial is: ");
-  Poly_print(&pb);
+  Poly_print(pb);
 
-  Poly pc;
-  Poly_new(&pc);
-  Poly_add(&pa, &pb, &pc);
+  Poly* pc = Poly_new();
+  Poly_add(pa, pb, pc);
   puts("sum:");
-  Poly_print(&pc);
+  Poly_print(pc);
 
-  Poly_dispose(&pa);
-  Poly_dispose(&pb);
-  Poly_dispose(&pc);
+  Poly_dispose(pa);
+  Poly_dispose(pb);
+  Poly_dispose(pc);
 
   return 0;
 }
@@ -86,7 +84,9 @@ void Poly_addTerm(Poly* this, double coefficient, int power) {
       break;
     }
   }
-  if (findSamePowerInOut != NULL) {
+
+  bool notFound = findSamePowerInOut != NULL;
+  if (notFound) {
     findSamePowerInOut->coefficient += coefficient;
   } else {
     Node_append(&this->terms, newTerm);
