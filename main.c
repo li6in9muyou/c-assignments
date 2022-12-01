@@ -10,7 +10,6 @@ struct Node {
 typedef struct Node Node;
 Node* Node_append(Node* this, void* data);
 void Node_init(Node* this);
-void Node_dispose(Node* this);
 
 struct Poly {
   Node terms;
@@ -21,7 +20,6 @@ void Poly_add(Poly* this, Poly* that, Poly* out);
 void Poly_addTerm(Poly* this, double coefficient, int power);
 void Poly_print(Poly* this);
 Poly* Poly_new();
-void Poly_dispose(Poly* this);
 void Poly_buildInteractively(Poly* this);
 
 struct Term {
@@ -48,10 +46,6 @@ int main() {
   Poly_add(pa, pb, pc);
   puts("sum:");
   Poly_print(pc);
-
-  Poly_dispose(pa);
-  Poly_dispose(pb);
-  Poly_dispose(pc);
 
   return 0;
 }
@@ -134,22 +128,6 @@ void Poly_add(Poly* this, Poly* that, Poly* out) {
   for (Node* p = that->terms.next; p != NULL; p = p->next) {
     Term* thatT = (Term*) p->data;
     Poly_addTerm(out, thatT->coefficient, thatT->power);
-  }
-}
-
-void Poly_dispose(Poly* this) {
-  for (Node* p = this->terms.next; p != NULL; p = p->next) {
-    free(p->data);
-  }
-  Node_dispose(&this->terms);
-}
-
-void Node_dispose(Node* this) {
-  if (this->next == NULL) {
-    free(this);
-    return;
-  } else {
-    Node_dispose(this->next);
   }
 }
 
