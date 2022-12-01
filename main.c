@@ -123,6 +123,7 @@ int main() {
   int nodeCnt;
   puts("enter node count");
   scanf_s("%d", &nodeCnt);
+  printf("%d nodes\n", nodeCnt);
 
   int* preOrderCompleteBinaryTree = calloc(nodeCnt + 1, sizeof(int));
   for (int i = 0; i < nodeCnt; ++i) {
@@ -131,8 +132,10 @@ int main() {
 
   Node* root = Tree_new(preOrderCompleteBinaryTree, nodeCnt + 1, 1);
 
+  puts("post order traversal");
   postTravel(root);
   putchar('\n');
+  puts("pretty print tree");
   printFromRoot(root);
 
   return 0;
