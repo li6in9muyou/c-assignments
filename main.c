@@ -120,6 +120,12 @@ void printFromRoot(Node* tree) {
 }
 
 int main() {
+  puts("this program create a complete binary tree\n"
+       "based on its pre-order traversal sequence"
+       "or level-order traversal sequence");
+  puts("choose: pre-order (enter 1) or level-order (enter 2)");
+  int ignored;
+  scanf_s("%d", &ignored);
   int nodeCnt;
   puts("enter node count");
   scanf_s("%d", &nodeCnt);
