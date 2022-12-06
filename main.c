@@ -9,15 +9,15 @@ struct Node {
 };
 typedef struct Node Node;
 
-Node* recursiveBuild(const int preOrder[], int count, int start) {
+Node* fromLevelOrderEncoding(const int preOrder[], int count, int start) {
   if (start >= count) {
     return NULL;
   }
 
   Node* root = (Node*) malloc(sizeof(Node));
   root->data = preOrder[start];
-  root->left = recursiveBuild(preOrder, count, 2 * start);
-  root->right = recursiveBuild(preOrder, count, 2 * start + 1);
+  root->left = fromLevelOrderEncoding(preOrder, count, 2 * start);
+  root->right = fromLevelOrderEncoding(preOrder, count, 2 * start + 1);
   return root;
 }
 
@@ -128,11 +128,11 @@ int main() {
        "based on its pre-order traversal sequence"
        "or level-order traversal sequence");
   puts("choose: pre-order (enter 1) or level-order (enter 2)");
-  int ignored;
-  scanf_s("%d", &ignored);
-  if (ignored == 1) {
+  int format;
+  scanf_s("%d", &format);
+  if (format == 1) {
     printf("you chose pre-order");
-  } else if (ignored == 2) {
+  } else if (format == 2) {
     printf("you chose level-order");
   } else {
     puts("wrong input, expecting 1 or 2");
@@ -155,7 +155,13 @@ int main() {
   }
   puts("");
 
-  Node* root = recursiveBuild(preOrderCompleteBinaryTree, nodeCnt + 1, 1);
+  Node* root;
+  if (format == 2) {
+    root = fromLevelOrderEncoding(preOrderCompleteBinaryTree, nodeCnt + 1, 1);
+  } else {
+    puts("not implemented");
+    exit(EXIT_FAILURE);
+  }
 
   puts("post order traversal");
   postTravel(root);
