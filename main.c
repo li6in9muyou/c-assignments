@@ -149,6 +149,12 @@ int main() {
     scanf_s("%d", &preOrderCompleteBinaryTree[i + 1]);
   }
 
+  printf("you entered sequence: ");
+  for (int i = 0; i < nodeCnt; ++i) {
+    printf("%d ", preOrderCompleteBinaryTree[i + 1]);
+  }
+  puts("");
+
   Node* root = recursiveBuild(preOrderCompleteBinaryTree, nodeCnt + 1, 1);
 
   puts("post order traversal");
