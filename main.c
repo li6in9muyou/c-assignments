@@ -71,7 +71,11 @@ int printSubTree(Node* tree, int is_left, int offset, int depth, char s[20][80])
 
   if (!tree) return 0;
 
-  sprintf_s(b, 6, "(%03d)", tree->data);
+  if (tree->data == -1) {
+    sprintf_s(b, 6, " NULL");
+  } else {
+    sprintf_s(b, 6, "(%03d)", tree->data);
+  }
 
   int left = printSubTree(tree->left, 1, offset, depth + 1, s);
   int right = printSubTree(tree->right, 0, offset + left + width, depth + 1, s);
@@ -139,6 +143,7 @@ int main() {
   scanf_s("%d", &nodeCnt);
   printf("%d nodes\n", nodeCnt);
 
+  puts("use -1 to indicate NULL nodes");
   int* preOrderCompleteBinaryTree = calloc(nodeCnt + 1, sizeof(int));
   for (int i = 0; i < nodeCnt; ++i) {
     scanf_s("%d", &preOrderCompleteBinaryTree[i + 1]);
