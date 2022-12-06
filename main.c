@@ -9,16 +9,54 @@ struct Node {
 };
 typedef struct Node Node;
 
-Node* fromLevelOrderEncoding(const int preOrder[], int count, int start) {
+Node* fromLevelOrderEncoding(const int levelOrder[], int count, int start) {
+  if (start >= count) {
+    return NULL;
+  }
+
+  Node* root = (Node*) malloc(sizeof(Node));
+  root->data = levelOrder[start];
+  root->left = fromLevelOrderEncoding(levelOrder, count, 2 * start);
+  root->right = fromLevelOrderEncoding(levelOrder, count, 2 * start + 1);
+  return root;
+}
+
+bool isNullNode(Node* node) {
+  return node == NULL || node->data == -1;
+}
+
+Node* fromPreOrderEncodingHelper(
+    const int preOrder[],
+    int count,
+    int start,
+    int* nextNodeStart
+) {
   if (start >= count) {
     return NULL;
   }
 
   Node* root = (Node*) malloc(sizeof(Node));
   root->data = preOrder[start];
-  root->left = fromLevelOrderEncoding(preOrder, count, 2 * start);
-  root->right = fromLevelOrderEncoding(preOrder, count, 2 * start + 1);
+  if (isNullNode(root)) {
+    *nextNodeStart += 1;
+    root->left = NULL;
+    root->right = NULL;
+  } else {
+    int next = start + 1;
+    root->left = fromPreOrderEncodingHelper(preOrder, count, next, &next);
+    root->right = fromPreOrderEncodingHelper(preOrder, count, next, &next);
+    *nextNodeStart = next;
+  }
   return root;
+}
+
+Node* fromPreOrderEncoding(
+    const int preOrder[],
+    int count,
+    int start
+) {
+  int next = start;
+  return fromPreOrderEncodingHelper(preOrder, count, start, &next);
 }
 
 Node* Stack[100];
@@ -159,8 +197,7 @@ int main() {
   if (format == 2) {
     root = fromLevelOrderEncoding(preOrderCompleteBinaryTree, nodeCnt + 1, 1);
   } else {
-    puts("not implemented");
-    exit(EXIT_FAILURE);
+    root = fromPreOrderEncoding(preOrderCompleteBinaryTree, nodeCnt + 1, 1);
   }
 
   puts("post order traversal");
