@@ -9,15 +9,15 @@ struct Node {
 };
 typedef struct Node Node;
 
-Node* Tree_new(const int preOrder[], int count, int start) {
+Node* recursiveBuild(const int preOrder[], int count, int start) {
   if (start >= count) {
     return NULL;
   }
 
   Node* root = (Node*) malloc(sizeof(Node));
   root->data = preOrder[start];
-  root->left = Tree_new(preOrder, count, 2 * start);
-  root->right = Tree_new(preOrder, count, 2 * start + 1);
+  root->left = recursiveBuild(preOrder, count, 2 * start);
+  root->right = recursiveBuild(preOrder, count, 2 * start + 1);
   return root;
 }
 
@@ -144,7 +144,7 @@ int main() {
     scanf_s("%d", &preOrderCompleteBinaryTree[i + 1]);
   }
 
-  Node* root = Tree_new(preOrderCompleteBinaryTree, nodeCnt + 1, 1);
+  Node* root = recursiveBuild(preOrderCompleteBinaryTree, nodeCnt + 1, 1);
 
   puts("post order traversal");
   postTravel(root);
