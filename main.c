@@ -25,9 +25,9 @@ void swap(int* a, int* b) {
 }
 
 void heap_insert(Heap* heap, int value) {
+  heap->data[heap->size] = value;
+  int i = heap->size;
   heap->size += 1;
-  int i = heap->size - 1;
-  heap->data[i] = value;
   while (i != 0 && heap->data[parent(i)] > heap->data[i]) {
     swap(&heap->data[i], &heap->data[parent(i)]);
     i = parent(i);
