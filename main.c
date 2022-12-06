@@ -126,6 +126,14 @@ int main() {
   puts("choose: pre-order (enter 1) or level-order (enter 2)");
   int ignored;
   scanf_s("%d", &ignored);
+  if (ignored == 1) {
+    printf("you chose pre-order");
+  } else if (ignored == 2) {
+    printf("you chose level-order");
+  } else {
+    puts("wrong input, expecting 1 or 2");
+    exit(EXIT_FAILURE);
+  }
   int nodeCnt;
   puts("enter node count");
   scanf_s("%d", &nodeCnt);
