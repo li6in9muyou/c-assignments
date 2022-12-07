@@ -22,7 +22,7 @@ Node* fromLevelOrderEncoding(const int levelOrder[], int count, int start) {
 }
 
 bool isNullNode(Node* node) {
-  return node == NULL || node->data == -1;
+  return node == NULL || node->data == 0;
 }
 
 Node* fromPreOrderEncodingHelper(
@@ -109,7 +109,7 @@ int printSubTree(Node* tree, int is_left, int offset, int depth, char s[20][80])
 
   if (!tree) return 0;
 
-  if (tree->data == -1) {
+  if (tree->data == 0) {
     sprintf_s(b, 6, " NULL");
   } else {
     sprintf_s(b, 6, "(%03d)", tree->data);
