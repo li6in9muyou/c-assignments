@@ -182,31 +182,41 @@ void postTravel(Node* root) {
 
 #define width 5
 
+void printLineSegment(char frameBuffer[20][255], int y, int left, int right) {
+  for (int x = left; x < right; x++)
+    frameBuffer[y][x] = '-';
+
+  frameBuffer[y][left] = '+';
+  frameBuffer[y][right] = '+';
+}
+
 int printSubTree(Node* tree, int is_left, int offset, int depth, char s[20][255]) {
   if (!tree) return 0;
 
-  int left = printSubTree(tree->left, 1, offset, depth + 1, s);
-
-  printNode(tree, offset + left, depth, s);
-
-  int right = printSubTree(tree->right, 0, offset + left + width, depth + 1, s);
+  int leftSubTreeWidth = printSubTree(tree->left, true, offset, depth + 1, s);
+  int rightSubTreeWidth = printSubTree(tree->right, false, offset + leftSubTreeWidth + width, depth + 1, s);
+  printNode(tree, offset + leftSubTreeWidth, depth, s);
 
   if (depth && is_left) {
-    for (int i = 0; i < width + right; i++)
-      s[2 * depth - 1][offset + left + width / 2 + i] = '-';
-
-    s[2 * depth - 1][offset + left + width / 2] = '+';
-    s[2 * depth - 1][offset + left + width + right + width / 2] = '+';
+    int middleOfThisNode = offset + leftSubTreeWidth + width / 2;
+    printLineSegment(
+        s,
+        2 * depth - 1,
+        middleOfThisNode,
+        middleOfThisNode + width + rightSubTreeWidth
+    );
   }
 
   if (depth && !is_left) {
-    for (int i = 0; i < left + width; i++)
-      s[2 * depth - 1][offset - width / 2 + i] = '-';
-
-    s[2 * depth - 1][offset + left + width / 2] = '+';
-    s[2 * depth - 1][offset - width / 2 - 1] = '+';
+    int middleOfThisNode = offset - width / 2 - 1;
+    printLineSegment(
+        s,
+        2 * depth - 1,
+        middleOfThisNode,
+        middleOfThisNode + leftSubTreeWidth + width
+    );
   }
-  return left + width + right;
+  return leftSubTreeWidth + width + rightSubTreeWidth;
 }
 
 void printNode(Node* node, int offset, int depth, char s[20][255]) {
@@ -225,7 +235,7 @@ void printFromRoot(Node* tree) {
   for (int i = 0; i < 20; i++)
     sprintf_s(frameBuffer[i], 255, "%254s", "");
 
-  printSubTree(tree, 0, 0, 0, frameBuffer);
+  printSubTree(tree, false, 0, 0, frameBuffer);
 
   for (int i = 0; i < 20; i++) {
     printf("%s\n", frameBuffer[i]);
