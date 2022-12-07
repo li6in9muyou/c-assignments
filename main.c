@@ -9,20 +9,95 @@ struct Node {
 };
 typedef struct Node Node;
 
-Node* fromLevelOrderEncoding(const int levelOrder[], int count, int start) {
-  if (start >= count) {
-    return NULL;
-  }
+#define SIZE 40
 
-  Node* root = (Node*) malloc(sizeof(Node));
-  root->data = levelOrder[start];
-  root->left = fromLevelOrderEncoding(levelOrder, count, 2 * start);
-  root->right = fromLevelOrderEncoding(levelOrder, count, 2 * start + 1);
-  return root;
+struct queue {
+  Node* items[SIZE];
+  int front;
+  int rear;
+};
+
+struct queue* createQueue();
+void enqueue(struct queue* q, Node*);
+Node* dequeue(struct queue* q);
+bool isEmptyQueue(struct queue* q);
+
+struct queue* createQueue() {
+  struct queue* q = malloc(sizeof(struct queue));
+  q->front = -1;
+  q->rear = -1;
+  return q;
+}
+
+bool isEmptyQueue(struct queue* q) {
+  if (q->rear == -1)
+    return 1;
+  else
+    return 0;
+}
+
+void enqueue(struct queue* q, Node* value) {
+  if (q->rear == SIZE - 1) {
+    printf("\nQueue is Full!!");
+  } else {
+    if (q->front == -1)
+      q->front = 0;
+    q->rear++;
+    q->items[q->rear] = value;
+  }
+}
+
+Node* dequeue(struct queue* q) {
+  Node* item;
+  if (isEmptyQueue(q)) {
+    item = NULL;
+  } else {
+    item = q->items[q->front];
+    q->front++;
+    if (q->front > q->rear) {
+      q->front = q->rear = -1;
+    }
+  }
+  return item;
 }
 
 bool isNullNode(Node* node) {
   return node == NULL || node->data == 0;
+}
+
+Node* fromLevelOrderEncoding(const int levelOrder[], int count) {
+  const int* read = &levelOrder[1];
+  Node* root = (Node*) malloc(sizeof(Node));
+  root->data = *read;
+  read++;
+
+  struct queue* Q = createQueue();
+  enqueue(Q, root);
+
+  while (!isEmptyQueue(Q)) {
+    Node* sub = dequeue(Q);
+
+    int leftValue = *read;
+    read++;
+    if (leftValue == 0) {
+      sub->left = NULL;
+    } else {
+      sub->left = (Node*) malloc(sizeof(Node));
+      sub->left->data = leftValue;
+      enqueue(Q, sub->left);
+    }
+
+    int rightValue = *read;
+    read++;
+    if (rightValue == 0) {
+      sub->right = NULL;
+    } else {
+      sub->right = (Node*) malloc(sizeof(Node));
+      sub->right->data = rightValue;
+      enqueue(Q, sub->right);
+    }
+  }
+  return root;
 }
 
 Node* fromPreOrderEncodingHelper(
@@ -195,7 +270,7 @@ int main() {
 
   Node* root;
   if (format == 2) {
-    root = fromLevelOrderEncoding(preOrderCompleteBinaryTree, nodeCnt + 1, 1);
+    root = fromLevelOrderEncoding(preOrderCompleteBinaryTree, nodeCnt);
   } else {
     root = fromPreOrderEncoding(preOrderCompleteBinaryTree, nodeCnt + 1, 1);
   }
