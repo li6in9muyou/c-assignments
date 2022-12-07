@@ -169,9 +169,9 @@ int main() {
   int format;
   scanf_s("%d", &format);
   if (format == 1) {
-    printf("you chose pre-order");
+    puts("you chose pre-order");
   } else if (format == 2) {
-    printf("you chose level-order");
+    puts("you chose level-order");
   } else {
     puts("wrong input, expecting 1 or 2");
     exit(EXIT_FAILURE);
