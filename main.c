@@ -16,7 +16,6 @@ struct queue {
 struct queue* createQueue();
 void enqueue(struct queue* q, int);
 int dequeue(struct queue* q);
-void display(struct queue* q);
 int isEmpty(struct queue* q);
 void printQueue(struct queue* q);
 
@@ -48,13 +47,11 @@ void enqueue(struct queue* q, int value) {
 int dequeue(struct queue* q) {
   int item;
   if (isEmpty(q)) {
-    printf("Queue is empty");
     item = -1;
   } else {
     item = q->items[q->front];
     q->front++;
     if (q->front > q->rear) {
-      printf("Resetting queue ");
       q->front = q->rear = -1;
     }
   }
@@ -63,15 +60,16 @@ int dequeue(struct queue* q) {
 
 void printQueue(struct queue* q) {
   int i;
-
-  if (isEmpty(q)) {
-    printf("Queue is empty");
-  } else {
-    printf("\nQueue contains \n");
+  printf("[");
+  if (!isEmpty(q)) {
     for (i = q->front; i < q->rear + 1; i++) {
-      printf("%d ", q->items[i]);
+      printf("%d", q->items[i]);
+      if (i < q->rear) {
+        printf(" ");
+      }
     }
   }
+  printf("]");
 }
 
 void bfs(int graph[nVertex][nVertex], int startVertex) {
@@ -84,10 +82,13 @@ void bfs(int graph[nVertex][nVertex], int startVertex) {
   visited[startVertex] = true;
   enqueue(q, startVertex);
 
+  printf("Processed Vertex\tQueue");
+
   while (!isEmpty(q)) {
-    printQueue(q);
+    puts("");
     int me = dequeue(q);
-    printf("Visited %d\n", me);
+    printf("%d\t\t\t", me);
+    printQueue(q);
 
     for (int ngb = 0; ngb < nVertex; ++ngb) {
       if (0 == graph[me][ngb]) {
@@ -182,6 +183,8 @@ int main() {
   };
 
   dijkstra(edgeWeights, 0);
+
+  puts("\nBFS traversal");
   bfs(edgeWeights, 0);
 
   return 0;
