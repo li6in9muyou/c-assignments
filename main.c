@@ -162,10 +162,10 @@ void printFromRoot(Node* tree) {
 }
 
 int main() {
-  puts("this program create a complete binary tree\n"
-       "based on its pre-order traversal sequence"
+  puts("this program create a binary tree\n"
+       "based on its pre-order traversal sequence "
        "or level-order traversal sequence");
-  puts("choose: pre-order (enter 1) or level-order (enter 2)");
+  puts("\nchoose: pre-order (enter 1) or level-order (enter 2)");
   int format;
   scanf_s("%d", &format);
   if (format == 1) {
@@ -200,10 +200,10 @@ int main() {
     root = fromPreOrderEncoding(preOrderCompleteBinaryTree, nodeCnt + 1, 1);
   }
 
-  puts("post order traversal");
+  printf("post order traversal: ");
   postTravel(root);
   putchar('\n');
-  puts("pretty print tree");
+  puts("pretty print tree: ");
   printFromRoot(root);
 
   return 0;
