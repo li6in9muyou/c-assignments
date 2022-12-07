@@ -190,34 +190,45 @@ void printLineSegment(char frameBuffer[20][255], int y, int left, int right) {
   frameBuffer[y][right] = '+';
 }
 
-int printSubTree(Node* tree, int is_left, int offset, int depth, char s[20][255]) {
+int printSubTree(Node* tree, int is_left, int translateX, int depth, char s[20][255]) {
   if (!tree) return 0;
 
-  int leftSubTreeWidth = printSubTree(tree->left, true, offset, depth + 1, s);
-  int rightSubTreeWidth = printSubTree(tree->right, false, offset + leftSubTreeWidth + width, depth + 1, s);
-  printNode(tree, offset + leftSubTreeWidth, depth, s);
+  int leftSubTreeWidth = printSubTree(
+      tree->left,
+      true,
+      translateX,
+      depth + 1,
+      s
+  );
+  int rightSubTreeWidth = printSubTree(
+      tree->right,
+      false,
+      translateX + leftSubTreeWidth + width,
+      depth + 1,
+      s
+  );
+
+  printNode(tree, translateX + leftSubTreeWidth, depth, s);
+  int myWidth = leftSubTreeWidth + width + rightSubTreeWidth;
 
   if (depth > 0) {
     if (is_left) {
-      int middleOfThisNode = offset + leftSubTreeWidth + width / 2;
       printLineSegment(
           s,
           2 * depth - 1,
-          middleOfThisNode,
-          middleOfThisNode + width + rightSubTreeWidth
+          translateX + leftSubTreeWidth + width / 2,
+          translateX + myWidth + width / 2
       );
     } else {
-      int middleOfThisNode = offset - width / 2 - 1;
       printLineSegment(
           s,
           2 * depth - 1,
-          middleOfThisNode,
-          middleOfThisNode + leftSubTreeWidth + width
+          translateX - width / 2 - 1,
+          translateX + leftSubTreeWidth + width / 2
       );
     }
   }
-  
-  return leftSubTreeWidth + width + rightSubTreeWidth;
+  return myWidth;
 }
 
 void printNode(Node* node, int offset, int depth, char s[20][255]) {
