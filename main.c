@@ -13,11 +13,21 @@ struct queue {
   int rear;
 };
 
+struct stack {
+  int items[SIZE];
+  int* pTop;
+};
+
 struct queue* createQueue();
 void enqueue(struct queue* q, int);
 int dequeue(struct queue* q);
-int isEmpty(struct queue* q);
+int isEmptyQueue(struct queue* q);
 void printQueue(struct queue* q);
+
+struct stack* createStack();
+void push(struct stack* s, int item);
+int pop(struct stack* s);
+int isEmptyStack(struct stack* s);
 
 struct queue* createQueue() {
   struct queue* q = malloc(sizeof(struct queue));
@@ -26,7 +36,7 @@ struct queue* createQueue() {
   return q;
 }
 
-int isEmpty(struct queue* q) {
+int isEmptyQueue(struct queue* q) {
   if (q->rear == -1)
     return 1;
   else
@@ -46,7 +56,7 @@ void enqueue(struct queue* q, int value) {
 
 int dequeue(struct queue* q) {
   int item;
-  if (isEmpty(q)) {
+  if (isEmptyQueue(q)) {
     item = -1;
   } else {
     item = q->items[q->front];
@@ -61,10 +71,44 @@ int dequeue(struct queue* q) {
 void printQueue(struct queue* q) {
   int i;
   printf("[");
-  if (!isEmpty(q)) {
+  if (!isEmptyQueue(q)) {
     for (i = q->front; i < q->rear + 1; i++) {
       printf("%d", q->items[i]);
       if (i < q->rear) {
+        printf(" ");
+      }
+    }
+  }
+  printf("]");
+}
+
+void push(struct stack* s, int item) {
+  *(s->pTop) = item;
+  s->pTop += 1;
+}
+
+int pop(struct stack* s) {
+  int ans = *(s->pTop - 1);
+  s->pTop -= 1;
+  return ans;
+}
+
+int isEmptyStack(struct stack* s) {
+  return s->items == s->pTop;
+}
+
+struct stack* createStack() {
+  struct stack* s = malloc(sizeof(struct stack));
+  s->pTop = s->items;
+  return s;
+}
+
+void printStack(struct stack* s) {
+  printf("[");
+  if (!isEmptyStack(s)) {
+    for (int* r = s->items; r != s->pTop; r++) {
+      printf("%d", *r);
+      if (r != s->pTop - 1) {
         printf(" ");
       }
     }
@@ -84,7 +128,7 @@ void bfs(int graph[nVertex][nVertex], int startVertex) {
 
   printf("Processed Vertex\tQueue");
 
-  while (!isEmpty(q)) {
+  while (!isEmptyQueue(q)) {
     puts("");
     int me = dequeue(q);
     printf("%d\t\t\t", me);
@@ -100,6 +144,36 @@ void bfs(int graph[nVertex][nVertex], int startVertex) {
         enqueue(q, ngb);
       }
     }
+  }
+}
+
+void dfs(int graph[nVertex][nVertex], int startVertex) {
+  bool visited[nVertex];
+  for (int i = 0; i < nVertex; ++i) {
+    visited[i] = false;
+  }
+
+  struct stack* s = createStack();
+  visited[startVertex] = true;
+  push(s, startVertex);
+
+  printf("Processed Vertex\tQueue");
+
+  while (!isEmptyStack(s)) {
+    puts("");
+    int me = pop(s);
+    printf("%d\t\t\t", me);
+    for (int ngb = 0; ngb < nVertex; ++ngb) {
+      if (0 == graph[me][ngb]) {
+        continue;
+      }
+
+      if (visited[ngb] == false) {
+        visited[ngb] = true;
+        push(s, ngb);
+      }
+    }
+    printStack(s);
   }
 }
 
@@ -186,6 +260,9 @@ int main() {
 
   puts("\nBFS traversal");
   bfs(edgeWeights, 0);
+
+  puts("\n\nDFS traversal");
+  dfs(edgeWeights, 0);
 
   return 0;
 }
