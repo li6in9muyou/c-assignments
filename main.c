@@ -22,6 +22,8 @@ void enqueue(struct queue* q, Node*);
 Node* dequeue(struct queue* q);
 bool isEmptyQueue(struct queue* q);
 
+void printNode(Node* node, int offset, int depth, char s[20][255]);
+
 struct queue* createQueue() {
   struct queue* q = malloc(sizeof(struct queue));
   q->front = -1;
@@ -178,23 +180,16 @@ void postTravel(Node* root) {
   }
 }
 
-int printSubTree(Node* tree, int is_left, int offset, int depth, char s[20][255]) {
-  char b[20];
-  int width = 5;
+#define width 5
 
+int printSubTree(Node* tree, int is_left, int offset, int depth, char s[20][255]) {
   if (!tree) return 0;
 
-  if (isNullNode(tree)) {
-    sprintf_s(b, 6, " NULL");
-  } else {
-    sprintf_s(b, 6, "(%03d)", tree->data);
-  }
-
   int left = printSubTree(tree->left, 1, offset, depth + 1, s);
-  int right = printSubTree(tree->right, 0, offset + left + width, depth + 1, s);
 
-  for (int i = 0; i < width; i++)
-    s[2 * depth][offset + left + i] = b[i];
+  printNode(tree, offset + left, depth, s);
+
+  int right = printSubTree(tree->right, 0, offset + left + width, depth + 1, s);
 
   if (depth && is_left) {
     for (int i = 0; i < width + right; i++)
@@ -212,6 +207,17 @@ int printSubTree(Node* tree, int is_left, int offset, int depth, char s[20][255]
     s[2 * depth - 1][offset - width / 2 - 1] = '+';
   }
   return left + width + right;
+}
+
+void printNode(Node* node, int offset, int depth, char s[20][255]) {
+  char b[20];
+  if (isNullNode(node)) {
+    sprintf_s(b, 6, " NULL");
+  } else {
+    sprintf_s(b, 6, "(%03d)", node->data);
+  }
+  for (int i = 0; i < width; i++)
+    s[2 * depth][offset + i] = b[i];
 }
 
 void printFromRoot(Node* tree) {
