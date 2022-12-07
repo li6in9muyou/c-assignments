@@ -197,25 +197,26 @@ int printSubTree(Node* tree, int is_left, int offset, int depth, char s[20][255]
   int rightSubTreeWidth = printSubTree(tree->right, false, offset + leftSubTreeWidth + width, depth + 1, s);
   printNode(tree, offset + leftSubTreeWidth, depth, s);
 
-  if (depth && is_left) {
-    int middleOfThisNode = offset + leftSubTreeWidth + width / 2;
-    printLineSegment(
-        s,
-        2 * depth - 1,
-        middleOfThisNode,
-        middleOfThisNode + width + rightSubTreeWidth
-    );
+  if (depth > 0) {
+    if (is_left) {
+      int middleOfThisNode = offset + leftSubTreeWidth + width / 2;
+      printLineSegment(
+          s,
+          2 * depth - 1,
+          middleOfThisNode,
+          middleOfThisNode + width + rightSubTreeWidth
+      );
+    } else {
+      int middleOfThisNode = offset - width / 2 - 1;
+      printLineSegment(
+          s,
+          2 * depth - 1,
+          middleOfThisNode,
+          middleOfThisNode + leftSubTreeWidth + width
+      );
+    }
   }
-
-  if (depth && !is_left) {
-    int middleOfThisNode = offset - width / 2 - 1;
-    printLineSegment(
-        s,
-        2 * depth - 1,
-        middleOfThisNode,
-        middleOfThisNode + leftSubTreeWidth + width
-    );
-  }
+  
   return leftSubTreeWidth + width + rightSubTreeWidth;
 }
 
