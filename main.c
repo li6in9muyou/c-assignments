@@ -132,7 +132,6 @@ void bfs(int graph[nVertex][nVertex], int startVertex) {
     puts("");
     int me = dequeue(q);
     printf("%d\t\t\t", me);
-    printQueue(q);
 
     for (int ngb = 0; ngb < nVertex; ++ngb) {
       if (0 == graph[me][ngb]) {
@@ -144,6 +143,7 @@ void bfs(int graph[nVertex][nVertex], int startVertex) {
         enqueue(q, ngb);
       }
     }
+    printQueue(q);
   }
 }
 
