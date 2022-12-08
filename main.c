@@ -157,7 +157,7 @@ void dfs(int graph[nVertex][nVertex], int startVertex) {
   visited[startVertex] = true;
   push(s, startVertex);
 
-  printf("Processed Vertex\tQueue");
+  printf("Processed Vertex\tStack");
 
   while (!isEmptyStack(s)) {
     puts("");
@@ -246,7 +246,7 @@ int main() {
   int edgeWeights[nVertex][nVertex] = {
       {0, 2, 0, 5, 0, 0, 0, 0, 0, 0,},
       {2, 0, 5, 2, 0, 0, 0, 0, 0, 0,},
-      {0, 5, 0, 0, 8, 4, 0, 0, 2, 0,},
+      {0, 5, 0, 0, 8, 4, 0, 0, 0, 0,},
       {5, 2, 0, 0, 0, 4, 2, 0, 0, 0,},
       {0, 0, 8, 0, 0, 2, 0, 5, 0, 0,},
       {0, 0, 4, 4, 2, 0, 3, 9, 6, 0,},
