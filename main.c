@@ -210,13 +210,13 @@ void printSolution(const int dist[nVertex], const int parent[nVertex], const int
 }
 
 void dijkstra(int graph[nVertex][nVertex], int src) {
-  bool processed[nVertex];
-
   int dist[nVertex];
+  bool processed[nVertex];
   for (int i = 0; i < nVertex; i++) {
     dist[i] = INT_MAX;
     processed[i] = false;
   }
+
   dist[src] = 0;
 
   int previousStop[nVertex];
