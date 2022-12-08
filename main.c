@@ -116,6 +116,8 @@ void printStack(struct stack* s) {
   printf("]");
 }
 
+// bfs 和 dfs 唯一的差别是 queue 和 stack ，这使得它们处理各节点的顺序不一样。
+
 void bfs(int graph[nVertex][nVertex], int startVertex) {
   bool visited[nVertex];
   for (int i = 0; i < nVertex; ++i) {
@@ -177,12 +179,12 @@ void dfs(int graph[nVertex][nVertex], int startVertex) {
   }
 }
 
-int minDistance(const int dist[], const bool sptSet[]) {
+int closestUnprocessedNode(const int dist[], const bool processed[]) {
   int min = INT_MAX;
   int min_index;
 
   for (int v = 0; v < nVertex; v++) {
-    if (sptSet[v] == false && dist[v] <= min) {
+    if (processed[v] == false && dist[v] <= min) {
       min = dist[v];
       min_index = v;
     }
@@ -195,6 +197,7 @@ void printSolution(const int dist[nVertex], const int parent[nVertex], const int
   printf("Vertex\t\tDistance\tPath\n");
   for (int i = 0; i < nVertex; i++) {
     printf("%d\t\t%d\t\t", i, dist[i]);
+    // 跟踪前序节点，并打印路径上的节点和距离，直到再无前序节点。
     int to = i;
     while (true) {
       int from = parent[to];
@@ -210,6 +213,7 @@ void printSolution(const int dist[nVertex], const int parent[nVertex], const int
 }
 
 void dijkstra(int graph[nVertex][nVertex], int src) {
+  // 开始时，从原节点到各节点的距离都是无穷，且各节点都未被处理。
   int dist[nVertex];
   bool processed[nVertex];
   for (int i = 0; i < nVertex; i++) {
@@ -217,22 +221,28 @@ void dijkstra(int graph[nVertex][nVertex], int src) {
     processed[i] = false;
   }
 
+  // 源节点到源节点的距离为零。
   dist[src] = 0;
 
+  // 该数组记录到某一节点的最短路上其前序节点是谁。
   int previousStop[nVertex];
   previousStop[src] = -1;
   for (int i = 0; i < nVertex - 1; i++) {
-    int u = minDistance(dist, processed);
+    // 找出未被处理的节点中，距离最小的一个
+    int u = closestUnprocessedNode(dist, processed);
+    // 节点不可达则跳过
     bool reachable = dist[u] != INT_MAX;
     if (!reachable) {
       continue;
     }
 
     processed[u] = true;
+    // 遍历该最小距离节点的额各个邻接节点。
     for (int nbg = 0; nbg < nVertex; nbg++) {
       bool isNeighbour = graph[u][nbg] != 0;
       if (isNeighbour && !processed[nbg]
           && dist[u] + graph[u][nbg] < dist[nbg]) {
+        // 找到通往 ngb 节点的更小的路径 i -> u -> ngb ，相应地更新距离表和前序节点表。
         dist[nbg] = dist[u] + graph[u][nbg];
         previousStop[nbg] = u;
       }
@@ -243,6 +253,8 @@ void dijkstra(int graph[nVertex][nVertex], int src) {
 }
 
 int main() {
+  // 硬编码给定的图为邻接矩阵，优点为简洁易懂，直观形象。
+  // 0 表示不存在边，距离为 edgeWeights[from][to] 。
   int edgeWeights[nVertex][nVertex] = {
       {0, 2, 0, 5, 0, 0, 0, 0, 0, 0,},
       {2, 0, 5, 2, 0, 0, 0, 0, 0, 0,},
