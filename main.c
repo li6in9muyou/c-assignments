@@ -126,12 +126,12 @@ void bfs(int graph[nVertex][nVertex], int startVertex) {
   visited[startVertex] = true;
   enqueue(q, startVertex);
 
-  printf("Processed Vertex\tQueue");
+  printf("%-20s%-20s", "Processed Vertex", "Queue");
 
   while (!isEmptyQueue(q)) {
     puts("");
     int me = dequeue(q);
-    printf("%d\t\t\t", me);
+    printf("%-20d", me);
 
     for (int ngb = 0; ngb < nVertex; ++ngb) {
       if (0 == graph[me][ngb]) {
@@ -157,12 +157,12 @@ void dfs(int graph[nVertex][nVertex], int startVertex) {
   visited[startVertex] = true;
   push(s, startVertex);
 
-  printf("Processed Vertex\tStack");
+  printf("%-20s%-20s", "Processed Vertex", "Stack");
 
   while (!isEmptyStack(s)) {
     puts("");
     int me = pop(s);
-    printf("%d\t\t\t", me);
+    printf("%-20d", me);
     for (int ngb = 0; ngb < nVertex; ++ngb) {
       if (0 == graph[me][ngb]) {
         continue;
@@ -192,9 +192,9 @@ int minDistance(const int dist[], const bool sptSet[]) {
 }
 
 void printSolution(const int dist[nVertex], const int parent[nVertex], const int weights[nVertex][nVertex]) {
-  printf("Vertex\t\tDistance\tPath\n");
+  printf("%-10s%-10s%-10s\n", "Vertex", "Distance", "Path");
   for (int i = 0; i < nVertex; i++) {
-    printf("%d\t\t%d\t\t", i, dist[i]);
+    printf("%-10d%-10d", i, dist[i]);
     int to = i;
     while (true) {
       int from = parent[to];
