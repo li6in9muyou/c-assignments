@@ -120,10 +120,10 @@ Edge* fn_filter(Predicate predicate, Edge array[], int size, Edge* filtered, int
   return filtered;
 }
 
-Edge fn_min(int(CompareFunction(const void*, const void*)), Edge array[], int size) {
+Edge fn_min(int(CompareFunction(const void*, const void*)), Edge array[], const int* size) {
   Edge e = array[0];
-  for (int i = 0; i < size; ++i) {
-    if (CompareFunction(&e, &array[i]) < 0) {
+  for (int i = 0; i < *size; ++i) {
+    if (CompareFunction(&array[i], &e) < 0) {
       e = array[i];
     }
   }
@@ -174,7 +174,7 @@ void prim(int weights[nVertex][nVertex]) {
             filtered,
             &filteredCount
         ),
-        filteredCount
+        &filteredCount
     );
     vertexIsSelected[e.one] = true;
     vertexIsSelected[e.two] = true;
