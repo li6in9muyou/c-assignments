@@ -99,9 +99,14 @@ void kruskal(int weights[nVertex][nVertex]) {
   printf("tree weight: %d\n", treeWeight);
 }
 
+typedef struct Closure {
+  bool* vertexIsSelected;
+  int* weights;
+} Closure;
+
 typedef struct Predicate {
-  void* closure;
-  bool (* apply)(void* closure, Edge);
+  Closure closure;
+  bool (* apply)(Closure closure, Edge);
 } Predicate;
 
 Edge* fn_filter(Predicate predicate, Edge array[], int size, Edge* filtered, int* filteredCount) {
@@ -125,9 +130,10 @@ Edge fn_min(int(CompareFunction(const void*, const void*)), Edge array[], int si
   return e;
 }
 
-bool doesNotFormLoop(void* closure, Edge e) {
-  bool* vertexIsSelected = (bool*) closure;
-  return vertexIsSelected[e.one] ^ vertexIsSelected[e.two];
+bool doesNotFormLoop(Closure closure, Edge e) {
+  return !closure.vertexIsSelected[e.two]
+      && closure.vertexIsSelected[e.one]
+      && ((int (*)[nVertex]) closure.weights)[e.one][e.two];
 }
 
 void prim(int weights[nVertex][nVertex]) {
@@ -150,7 +156,10 @@ void prim(int weights[nVertex][nVertex]) {
 
   vertexIsSelected[nVertex - 1] = true;
 
-  Predicate predicate = {vertexIsSelected, doesNotFormLoop};
+  Predicate predicate = {
+      (Closure) {vertexIsSelected, (int*) weights},
+      doesNotFormLoop
+  };
 
   int edgeCntInTree = 0;
   while (edgeCntInTree < nVertex - 1) {
