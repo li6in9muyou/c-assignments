@@ -99,35 +99,81 @@ void kruskal(int weights[nVertex][nVertex]) {
   printf("tree weight: %d\n", treeWeight);
 }
 
-void prim(int edges[nVertex][nVertex]) {
+typedef struct Predicate {
+  void* closure;
+  bool (* apply)(void* closure, Edge);
+} Predicate;
+
+Edge* fn_filter(Predicate predicate, Edge array[], int size, Edge* filtered, int* filteredCount) {
+  *filteredCount = 0;
+  for (int i = 0; i < size; ++i) {
+    if (predicate.apply(predicate.closure, array[i])) {
+      filtered[*filteredCount] = array[i];
+      (*filteredCount) += 1;
+    }
+  }
+  return filtered;
+}
+
+Edge fn_min(int(CompareFunction(const void*, const void*)), Edge array[], int size) {
+  Edge e = array[0];
+  for (int i = 0; i < size; ++i) {
+    if (CompareFunction(&e, &array[i]) < 0) {
+      e = array[i];
+    }
+  }
+  return e;
+}
+
+bool doesNotFormLoop(void* closure, Edge e) {
+  bool* vertexIsSelected = (bool*) closure;
+  return vertexIsSelected[e.one] ^ vertexIsSelected[e.two];
+}
+
+void prim(int weights[nVertex][nVertex]) {
   int edgeCnt = 0;
+  Edge edges[nVertex * nVertex];
+  for (int from = 0; from < nVertex; ++from) {
+    for (int to = 0; to < nVertex; ++to) {
+      bool isAdjacent = weights[from][to] != 0;
+      if (isAdjacent) {
+        edges[edgeCnt].weight = weights[from][to];
+        edges[edgeCnt].one = from;
+        edges[edgeCnt].two = to;
+        edgeCnt += 1;
+      }
+    }
+  }
+
   int treeWeight = 0;
-  int vertexIsSelected[nVertex] = {false,};
+  bool vertexIsSelected[nVertex] = {false,};
 
   vertexIsSelected[nVertex - 1] = true;
 
-  while (edgeCnt < nVertex - 1) {
-    int min = INT_MAX;
-    int x = 0;
-    int y = 0;
-    for (int i = 0; i < nVertex; ++i) {
-      if (vertexIsSelected[i]) {
-        for (int j = 0; j < nVertex; ++j) {
-          if (!vertexIsSelected[j] && edges[i][j]) {
-            if (min > edges[i][j]) {
-              min = edges[i][j];
-              x = i;
-              y = j;
-            }
-          }
-        }
-      }
-    }
-    treeWeight += edges[x][y];
-    show_edge(edges, x, y);
+  Predicate predicate = {vertexIsSelected, doesNotFormLoop};
 
-    vertexIsSelected[y] = true;
-    edgeCnt += 1;
+  int edgeCntInTree = 0;
+  while (edgeCntInTree < nVertex - 1) {
+    int filteredCount = 0;
+    Edge filtered[nVertex * nVertex];
+    Edge e = fn_min(
+        weight_ascending,
+        fn_filter(
+            predicate,
+            edges,
+            edgeCnt,
+            filtered,
+            &filteredCount
+        ),
+        filteredCount
+    );
+    vertexIsSelected[e.one] = true;
+    vertexIsSelected[e.two] = true;
+
+    treeWeight += e.weight;
+    show_edge(weights, e.one, e.two);
+
+    edgeCntInTree += 1;
   }
   printf("tree weight: %d\n", treeWeight);
 }
