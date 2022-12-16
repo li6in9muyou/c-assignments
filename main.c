@@ -8,7 +8,7 @@
 void prim(int edges[nVertex][nVertex]);
 void kruskal(int weights[nVertex][nVertex]);
 
-void show_edge(int adjacentMatrix[10][10], int x, int y);
+void show_edge(int adjacentMatrix[nVertex][nVertex], int x, int y);
 
 int main() {
   int edgeWeights[nVertex][nVertex] = {
@@ -132,7 +132,7 @@ void prim(int edges[nVertex][nVertex]) {
   printf("tree weight: %d\n", treeWeight);
 }
 
-void show_edge(int adjacentMatrix[10][10], int x, int y) {
+void show_edge(int adjacentMatrix[nVertex][nVertex], int x, int y) {
   int smaller = min(x, y);
   int bigger = max(x, y);
 
