@@ -5,7 +5,7 @@
 
 #define nVertex 10
 
-void prim(int edges[nVertex][nVertex]);
+void prim(int weights[nVertex][nVertex]);
 void kruskal(int weights[nVertex][nVertex]);
 
 void show_edge(int adjacentMatrix[nVertex][nVertex], int x, int y);
