@@ -29,6 +29,9 @@ void push(struct stack* s, int item);
 int pop(struct stack* s);
 int isEmptyStack(struct stack* s);
 
+void prim(int edges[10][10]);
+void kruskal(int edges[10][10]);
+
 struct queue* createQueue() {
   struct queue* q = malloc(sizeof(struct queue));
   q->front = -1;
@@ -257,13 +260,19 @@ int main() {
       {8, 0, 0, 0, 0, 0, 5, 0, 0, 0,},
   };
 
-  dijkstra(edgeWeights, 0);
+  puts("\nBy Prim algorithm");
+  prim(edgeWeights);
 
-  puts("\nBFS traversal");
-  bfs(edgeWeights, 0);
-
-  puts("\n\nDFS traversal");
-  dfs(edgeWeights, 0);
+  puts("\nBy kruskal algorithm");
+  kruskal(edgeWeights);
 
   return 0;
+}
+
+void kruskal(int edges[10][10]) {
+
+}
+
+void prim(int edges[10][10]) {
+
 }
