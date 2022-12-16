@@ -101,13 +101,13 @@ void kruskal(int weights[nVertex][nVertex]) {
 
 typedef struct Predicate {
   void* closure;
-  bool (* apply)(void* closure, void*);
+  bool (* call)(void* closure, void*);
 } Predicate;
 
 Edge* fn_filter(Predicate predicate, Edge array[], int size, Edge* filtered, int* filteredCount) {
   *filteredCount = 0;
   for (int i = 0; i < size; ++i) {
-    if (predicate.apply(predicate.closure, &array[i])) {
+    if (predicate.call(predicate.closure, &array[i])) {
       filtered[*filteredCount] = array[i];
       (*filteredCount) += 1;
     }
