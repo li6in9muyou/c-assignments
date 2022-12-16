@@ -246,7 +246,7 @@ void dijkstra(int graph[nVertex][nVertex], int src) {
 }
 
 int main() {
-  char vertexLable[10] = "BCDFHLWXYZ";
+  char vertexLable[nVertex] = "BCDFHLWXYZ";
   int edgeWeights[nVertex][nVertex] = {
       {0, 0, 5, 0, 0, 4, 5, 0, 0, 8,},
       {0, 0, 0, 7, 6, 0, 0, 0, 6, 0,},
@@ -269,10 +269,10 @@ int main() {
   return 0;
 }
 
-void kruskal(int edges[10][10]) {
+void kruskal(int edges[nVertex][nVertex]) {
 
 }
 
-void prim(int edges[10][10]) {
+void prim(int edges[nVertex][nVertex]) {
 
 }
