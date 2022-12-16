@@ -131,8 +131,8 @@ Edge fn_min(int(CompareFunction(const void*, const void*)), Edge array[], int si
 }
 
 bool doesNotFormLoop(Closure closure, Edge e) {
-  return !closure.vertexIsSelected[e.two]
-      && closure.vertexIsSelected[e.one]
+  return closure.vertexIsSelected[e.one]
+      && !closure.vertexIsSelected[e.two]
       && ((int (*)[nVertex]) closure.weights)[e.one][e.two];
 }
 
