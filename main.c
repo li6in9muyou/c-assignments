@@ -11,7 +11,7 @@ void kruskal(int weights[nVertex][nVertex]);
 void show_edge(int adjacentMatrix[nVertex][nVertex], int x, int y);
 
 typedef struct Edge Edge;
-int extractAllEdges(int weights[10][10], Edge* edges);
+int extractAllEdges(int weights[10][10], Edge* out_edges);
 
 int main() {
   int edgeWeights[nVertex][nVertex] = {
@@ -91,15 +91,15 @@ void kruskal(int weights[nVertex][nVertex]) {
   printf("tree weight: %d\n", treeWeight);
 }
 
-int extractAllEdges(int weights[10][10], Edge* edges) {
+int extractAllEdges(int weights[10][10], Edge* out_edges) {
   int edgeCnt = 0;
   for (int from = 0; from < nVertex; ++from) {
     for (int to = 0; to < nVertex; ++to) {
       bool isAdjacent = weights[from][to] != 0;
       if (isAdjacent) {
-        edges[edgeCnt].weight = weights[from][to];
-        edges[edgeCnt].one = from;
-        edges[edgeCnt].two = to;
+        out_edges[edgeCnt].weight = weights[from][to];
+        out_edges[edgeCnt].one = from;
+        out_edges[edgeCnt].two = to;
         edgeCnt += 1;
       }
     }
