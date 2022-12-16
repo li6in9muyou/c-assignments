@@ -8,7 +8,7 @@
 void prim(int edges[nVertex][nVertex]);
 void kruskal(int weights[nVertex][nVertex]);
 
-char vertexLabel[nVertex] = "BCDFHLWXYZ";
+void show_edge(int adjacentMatrix[10][10], int x, int y);
 
 int main() {
   int edgeWeights[nVertex][nVertex] = {
@@ -92,7 +92,7 @@ void kruskal(int weights[nVertex][nVertex]) {
     Edge e = edges[i];
     if (do_find(u, e.one) != do_find(u, e.two)) {
       do_union(u, e.one, e.two);
-      printf("%c -(%d)- %c\n", vertexLabel[e.one], e.weight, vertexLabel[e.two]);
+      show_edge(weights, e.one, e.two);
       treeWeight += e.weight;
     }
   }
@@ -124,10 +124,23 @@ void prim(int edges[nVertex][nVertex]) {
       }
     }
     treeWeight += edges[x][y];
-    printf("%c -(%d)- %c\n", vertexLabel[x], edges[x][y], vertexLabel[y]);
+    show_edge(edges, x, y);
 
     vertexIsSelected[y] = true;
     edgeCnt += 1;
   }
   printf("tree weight: %d\n", treeWeight);
+}
+
+void show_edge(int adjacentMatrix[10][10], int x, int y) {
+  int smaller = min(x, y);
+  int bigger = max(x, y);
+
+  const char vertexLabel[nVertex] = "BCDFHLWXYZ";
+  printf(
+      "%c -(%d)- %c\n",
+      vertexLabel[smaller],
+      adjacentMatrix[smaller][bigger],
+      vertexLabel[bigger]
+  );
 }
