@@ -5,10 +5,10 @@
 
 #define nVertex 10
 
-void prim(int edges[10][10]);
-void kruskal(int edges[10][10]);
+void prim(int edges[nVertex][nVertex]);
+void kruskal(int weights[nVertex][nVertex]);
 
-char vertexLable[nVertex] = "BCDFHLWXYZ";
+char vertexLabel[nVertex] = "BCDFHLWXYZ";
 
 int main() {
   int edgeWeights[nVertex][nVertex] = {
@@ -92,7 +92,7 @@ void kruskal(int weights[nVertex][nVertex]) {
     Edge e = edges[i];
     if (do_find(u, e.one) != do_find(u, e.two)) {
       do_union(u, e.one, e.two);
-      printf("%c -(%d)- %c\n", vertexLable[e.one], e.weight, vertexLable[e.two]);
+      printf("%c -(%d)- %c\n", vertexLabel[e.one], e.weight, vertexLabel[e.two]);
       treeWeight += e.weight;
     }
   }
@@ -124,7 +124,7 @@ void prim(int edges[nVertex][nVertex]) {
       }
     }
     treeWeight += edges[x][y];
-    printf("%c -(%d)- %c\n", vertexLable[x], edges[x][y], vertexLable[y]);
+    printf("%c -(%d)- %c\n", vertexLabel[x], edges[x][y], vertexLabel[y]);
 
     vertexIsSelected[y] = true;
     edgeCnt += 1;
