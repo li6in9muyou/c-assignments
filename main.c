@@ -10,6 +10,9 @@ void kruskal(int weights[nVertex][nVertex]);
 
 void show_edge(int adjacentMatrix[nVertex][nVertex], int x, int y);
 
+typedef struct Edge Edge;
+int extractAllEdges(int weights[10][10], Edge* edges);
+
 int main() {
   int edgeWeights[nVertex][nVertex] = {
       {0, 0, 5, 0, 0, 4, 5, 0, 0, 8,},
@@ -61,8 +64,35 @@ int weight_ascending(const void* _a, const void* _b) {
 }
 
 void kruskal(int weights[nVertex][nVertex]) {
-  int edgeCnt = 0;
   Edge edges[nVertex * nVertex];
+  int edgesSize = extractAllEdges(weights, edges);
+
+  qsort(
+      edges,
+      edgesSize,
+      sizeof(Edge),
+      weight_ascending
+  );
+
+  int u[nVertex];
+  for (int i = 0; i < nVertex; ++i) {
+    u[i] = i;
+  }
+
+  int treeWeight = 0;
+  for (int i = 0; i < edgesSize; ++i) {
+    Edge e = edges[i];
+    if (do_find(u, e.one) != do_find(u, e.two)) {
+      do_union(u, e.one, e.two);
+      show_edge(weights, e.one, e.two);
+      treeWeight += e.weight;
+    }
+  }
+  printf("tree weight: %d\n", treeWeight);
+}
+
+int extractAllEdges(int weights[10][10], Edge* edges) {
+  int edgeCnt = 0;
   for (int from = 0; from < nVertex; ++from) {
     for (int to = 0; to < nVertex; ++to) {
       bool isAdjacent = weights[from][to] != 0;
@@ -74,29 +104,7 @@ void kruskal(int weights[nVertex][nVertex]) {
       }
     }
   }
-
-  qsort(
-      edges,
-      edgeCnt,
-      sizeof(Edge),
-      weight_ascending
-  );
-
-  int u[nVertex];
-  for (int i = 0; i < nVertex; ++i) {
-    u[i] = i;
-  }
-
-  int treeWeight = 0;
-  for (int i = 0; i < edgeCnt; ++i) {
-    Edge e = edges[i];
-    if (do_find(u, e.one) != do_find(u, e.two)) {
-      do_union(u, e.one, e.two);
-      show_edge(weights, e.one, e.two);
-      treeWeight += e.weight;
-    }
-  }
-  printf("tree weight: %d\n", treeWeight);
+  return edgeCnt;
 }
 
 void prim(int edges[nVertex][nVertex]) {
