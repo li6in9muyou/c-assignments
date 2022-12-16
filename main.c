@@ -120,9 +120,9 @@ Edge* fn_filter(Predicate predicate, Edge array[], int size, Edge* filtered, int
   return filtered;
 }
 
-Edge fn_min(int(CompareFunction(const void*, const void*)), Edge array[], const int* size) {
+Edge fn_min(int(CompareFunction(const void*, const void*)), Edge array[], int size) {
   Edge e = array[0];
-  for (int i = 0; i < *size; ++i) {
+  for (int i = 0; i < size; ++i) {
     if (CompareFunction(&array[i], &e) < 0) {
       e = array[i];
     }
@@ -163,18 +163,19 @@ void prim(int weights[nVertex][nVertex]) {
 
   int edgeCntInTree = 0;
   while (edgeCntInTree < nVertex - 1) {
-    int filteredCount = 0;
-    Edge filtered[nVertex * nVertex];
+    int size = 0;
+    Edge b[nVertex * nVertex];
+    Edge* thoseDoNotFormLoop = fn_filter(
+        predicate,
+        edges,
+        edgeCnt,
+        b,
+        &size
+    );
     Edge e = fn_min(
         weight_ascending,
-        fn_filter(
-            predicate,
-            edges,
-            edgeCnt,
-            filtered,
-            &filteredCount
-        ),
-        &filteredCount
+        thoseDoNotFormLoop,
+        size
     );
     vertexIsSelected[e.one] = true;
     vertexIsSelected[e.two] = true;
